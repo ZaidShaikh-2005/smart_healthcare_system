@@ -701,41 +701,37 @@ def ai_analyzer(request):
             "high_risk": high_risk,
         }
     )
+from django.core.management.base import BaseCommand
+from app.models import Symptom
+import pandas as pd
+import os
+from django.conf import settings
 
-@login_required
-def patient_symptoms(request):
-    patient = get_object_or_404(Patient, user=request.user)
-    symptoms = Symptom.objects.all()
+class Command(BaseCommand):
+    help = "Load symptoms from CSV into database"
 
-    if request.method == "POST":
-        selected = request.POST.getlist("symptoms")
+    def handle(self, *args, **kwargs):
+        csv_path = os.path.join(
+            settings.BASE_DIR,
+            "archive",
+            "Symptom-severity.csv"
+        )
 
-        # 🔥 purane symptoms delete
-        PatientSymptom.objects.filter(patient=patient).delete()
+        df = pd.read_csv(csv_path)
 
-        # 🔥 naye symptoms insert
-        bulk_data = [
-            PatientSymptom(
-                patient=patient,
-                symptom_id=sid
+        created = 0
+        for _, row in df.iterrows():
+            symptom_name = row["Symptom"].strip()
+
+            obj, is_created = Symptom.objects.get_or_create(
+                name=symptom_name
             )
-            for sid in selected
-        ]
-        PatientSymptom.objects.bulk_create(bulk_data)
+            if is_created:
+                created += 1
 
-        messages.success(request, "Symptoms saved successfully")
-        return redirect("patient-dashboard")
-
-    # ✅ selected symptoms IDs
-    selected_ids = PatientSymptom.objects.filter(
-        patient=patient
-    ).values_list("symptom_id", flat=True)
-
-    return render(
-        request,
-        "app/patient/symptoms.html",
-        {
-            "symptoms": symptoms,
-            "selected_ids": selected_ids
-        }
-    )
+        self.stdout.write(
+            self.style.SUCCESS(
+                f"✅ {created} symptoms loaded successfully"
+            )
+        )
+# web: python manage.py migrate --noinput && gunicorn soloRising.wsgi:application --bind 0.0.0.0:$PORT
