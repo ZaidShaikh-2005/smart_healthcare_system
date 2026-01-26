@@ -156,3 +156,13 @@ DATABASES = {
         ssl_require=True,
     )
 }### add new
+
+
+# ===== ONE TIME SYMPTOM IMPORT (REMOVE AFTER SUCCESS) =====
+if os.environ.get("RAILWAY_ENVIRONMENT") == "production":
+    try:
+        from django.core.management import call_command
+        call_command("import_symptoms")
+    except Exception as e:
+        print("IMPORT SYMPTOMS ERROR:", e)
+### add new
