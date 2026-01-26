@@ -1,1 +1,1 @@
-web: python manage.py migrate --noinput && gunicorn soloRising.wsgi:application --bind 0.0.0.0:$PORT
+web: python manage.py migrate && python manage.py load_symptoms && gunicorn soloRising.wsgi:application --bind 0.0.0.0:$PORT

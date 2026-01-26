@@ -701,6 +701,45 @@ def ai_analyzer(request):
             "high_risk": high_risk,
         }
     )
+
+# @login_required
+# def patient_symptoms(request):
+#     patient = get_object_or_404(Patient, user=request.user)
+#     symptoms = Symptom.objects.all()
+
+#     if request.method == "POST":
+#         selected = request.POST.getlist("symptoms")
+
+#         # 🔥 purane symptoms delete
+#         PatientSymptom.objects.filter(patient=patient).delete()
+
+#         # 🔥 naye symptoms insert
+#         bulk_data = [
+#             PatientSymptom(
+#                 patient=patient,
+#                 symptom_id=sid
+#             )
+#             for sid in selected
+#         ]
+#         PatientSymptom.objects.bulk_create(bulk_data)
+
+#         messages.success(request, "Symptoms saved successfully")
+#         return redirect("patient-dashboard")
+
+#     # ✅ selected symptoms IDs
+#     selected_ids = PatientSymptom.objects.filter(
+#         patient=patient
+#     ).values_list("symptom_id", flat=True)
+
+#     return render(
+#         request,
+#         "app/patient/symptoms.html",
+#         {
+#             "symptoms": symptoms,
+#             "selected_ids": selected_ids
+#         }
+#     )
+
 from django.core.management.base import BaseCommand
 from app.models import Symptom
 import pandas as pd
