@@ -30,14 +30,18 @@ from .forms import (
 # HOME REDIRECT (ROLE BASED) → LOGIN REQUIRED
 # =====================================================
 
+
+@login_required
 def home_redirect(request):
+
+    # ✅ EXTRA SAFETY (VERY IMPORTANT)          ##add neww
+    if not request.user.is_authenticated:
+        return redirect("login")
+
     try:
         profile = UserProfile.objects.get(user=request.user)
     except UserProfile.DoesNotExist:
-        messages.error(
-            request,
-            "Account setup incomplete. Please login again."
-        )
+        messages.error(request, "Account setup incomplete. Please login again.")
         logout(request)
         return redirect("login")
 
@@ -47,7 +51,6 @@ def home_redirect(request):
     if profile.role == "DOCTOR":
         return redirect("doctor-dashboard")
 
-    messages.error(request, "Invalid user role.")
     logout(request)
     return redirect("login")
 
