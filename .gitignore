@@ -1,0 +1,17 @@
+# Python
+__pycache__/
+*.pyc
+
+# Django
+db.sqlite3
+media/
+
+# PyInstaller / Archive
+archive/
+dist/
+build/
+*.spec
+*.exe
+
+# Env
+.env

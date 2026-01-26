@@ -1,0 +1,68 @@
+{% extends "app/base.html" %}
+{% load static %}
+
+{% block title %}Select Registration Role{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center align-items-center mt-5">
+  <div class="col-md-10 text-center">
+
+    <h2 class="mb-4 fw-bold">📝 Register As</h2>
+    <p class="text-muted mb-5">
+      Choose your role to create an account
+    </p>
+
+    <div class="row justify-content-center g-4">
+
+      <!-- ================= PATIENT REGISTRATION ================= -->
+      <div class="col-md-4">
+        <a href="{% url 'registration' %}?role=PATIENT" class="text-decoration-none">
+          <div class="card register-card p-4 h-100 text-center">
+            <div class="display-4 mb-3">🧍‍♂️</div>
+            <h4 class="fw-bold">Patient</h4>
+            <p class="mt-2 text-muted">
+              Track health data, view reports & book appointments
+            </p>
+          </div>
+        </a>
+      </div>
+
+      <!-- ================= DOCTOR REGISTRATION ================= -->
+      <div class="col-md-4">
+        <a href="{% url 'registration' %}?role=DOCTOR" class="text-decoration-none">
+          <div class="card register-card p-4 h-100 text-center">
+            <div class="display-4 mb-3">👨‍⚕️</div>
+            <h4 class="fw-bold">Doctor</h4>
+            <p class="mt-2 text-muted">
+              Manage patients, appointments & medical records
+            </p>
+          </div>
+        </a>
+      </div>
+
+    </div>
+
+    <!-- OPTIONAL LOGIN LINK -->
+    <div class="mt-5">
+      <p class="text-muted">
+        Already have an account?
+        <a href="{% url 'login' %}" class="fw-bold text-decoration-none">
+          Login here
+        </a>
+      </p>
+    </div>
+
+  </div>
+</div>
+
+<style>
+.register-card {
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+.register-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(47, 227, 194, 0.4);
+}
+</style>
+{% endblock %}

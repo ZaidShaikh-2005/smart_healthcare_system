@@ -1,0 +1,127 @@
+{% extends 'app/base.html' %}
+{% block title %}Patient Details{% endblock %}
+
+{% block content %}
+
+<style>
+/* ================= PAGE HEADER ================= */
+.patient-header h3 {
+    color: #2fe3c2;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+}
+
+/* ================= INFO CARD ================= */
+.info-card {
+    background: linear-gradient(145deg, #16292b, #0f1c1e);
+    border-radius: 18px;
+    border: 1px solid rgba(47,227,194,0.25);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.6);
+}
+
+/* ================= INFO TEXT ================= */
+.info-card p {
+    margin-bottom: 6px;
+    color: #eafdfc;
+}
+
+.info-card h5 {
+    color: #9ff3e7;
+    margin-bottom: 12px;
+}
+
+/* ================= RECORD CARD ================= */
+.record-card {
+    background: linear-gradient(145deg, #16292b, #0f1c1e);
+    border-radius: 16px;
+    border: 1px solid rgba(47,227,194,0.25);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.55);
+    transition: transform 0.3s ease;
+}
+
+.record-card:hover {
+    transform: translateY(-4px);
+}
+
+/* ================= RECORD TITLE ================= */
+.record-card strong {
+    color: #2fe3c2;
+}
+
+/* ================= SECTION TITLE ================= */
+.section-title {
+    color: #9ff3e7;
+    margin-top: 35px;
+    margin-bottom: 20px;
+}
+
+/* ================= EMPTY ================= */
+.empty-text {
+    color: #9fb9b5;
+    font-style: italic;
+}
+</style>
+
+<div class="patient-header mb-4 d-flex justify-content-between align-items-center">
+    <h3>
+        🩺 {{ patient.full_name|default:patient.user.username }} — Health Records
+    </h3>
+
+    <!-- BACK BUTTON -->
+    <a href="{% url 'doctor-dashboard' %}" class="btn btn-outline-info">
+        ← Back to Dashboard
+    </a>
+</div>
+
+<!-- BASIC INFO -->
+<div class="row mb-4">
+    <div class="col-md-6">
+        <div class="info-card p-4">
+            <h5>👤 Basic Information</h5>
+            <p><strong>Age:</strong> {{ patient.age|default:"—" }}</p>
+            <p><strong>Gender:</strong> {{ patient.gender|default:"—" }}</p>
+            <p><strong>City:</strong> {{ patient.city|default:"—" }}</p>
+            <p><strong>State:</strong> {{ patient.state|default:"—" }}</p>
+        </div>
+    </div>
+</div>
+
+<!-- HEALTH HISTORY -->
+<h4 class="section-title">📊 Health History</h4>
+
+<div class="row">
+    {% for record in records %}
+    <div class="col-md-4 mb-4">
+        <div class="record-card p-3 h-100">
+
+            <p><strong>Date:</strong>
+                {{ record.recorded_at|date:"d M Y, h:i A" }}
+            </p>
+
+            <p>❤️ <strong>Heart Rate:</strong> {{ record.heart_rate }} bpm</p>
+            <p>🌡 <strong>Temperature:</strong> {{ record.temperature }} °C</p>
+            <p>🫁 <strong>SpO₂:</strong> {{ record.oxygen_level }}%</p>
+            <p>🩸 <strong>BP:</strong>
+                {{ record.systolic_bp }}/{{ record.diastolic_bp }}
+            </p>
+            <p>🧪 <strong>Glucose:</strong>
+                {{ record.glucose_level }} mg/dL
+            </p>
+            <p>⚖ <strong>Weight:</strong> {{ record.weight }} kg</p>
+
+            {% if record.ecg %}
+            <p class="mt-2">
+                📈 <strong>ECG:</strong>
+                <span class="text-success">Available</span>
+            </p>
+            {% endif %}
+        </div>
+    </div>
+    {% empty %}
+        <p class="empty-text">
+            No health records available for this patient.
+        </p>
+    {% endfor %}
+</div>
+
+{% endblock %}

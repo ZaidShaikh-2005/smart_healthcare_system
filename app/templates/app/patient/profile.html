@@ -1,0 +1,137 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block title %} | Patient Profile{% endblock title %}
+
+{% block content %}
+
+<style>
+.profile-wrapper{
+  background: radial-gradient(circle at top, #0f2f2f, #050d0d);
+  color:#e6fffa;
+  padding:40px 0;
+  min-height:70vh;
+}
+
+.profile-wrapper h3{
+  color:#7fffe1;
+  text-shadow:0 0 8px rgba(127,255,225,.6);
+}
+
+/* AVATAR */
+.profile-avatar{
+  width:130px;
+  height:130px;
+  border-radius:50%;
+  background:#1dbf9f;
+  color:#022;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:46px;
+  font-weight:bold;
+  margin:0 auto 20px;
+  cursor:pointer;
+  overflow:hidden;
+  box-shadow:0 0 20px rgba(0,255,190,.9);
+}
+
+.profile-avatar img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  border-radius:50%;
+}
+
+/* FORM */
+.profile-wrapper form{
+  background: linear-gradient(180deg,#0e2a2a,#061818);
+  padding:25px;
+  border-radius:16px;
+  border:1px solid rgba(0,255,200,.25);
+  box-shadow:0 0 25px rgba(0,255,200,.15);
+}
+
+.profile-wrapper label{
+  color:#7fffe1;
+}
+
+.profile-wrapper input,
+.profile-wrapper select,
+.profile-wrapper textarea{
+  background:#050d0d!important;
+  border:1px solid rgba(0,255,200,.35)!important;
+  color:#e6fffa!important;
+}
+
+.profile-wrapper input:focus,
+.profile-wrapper select:focus,
+.profile-wrapper textarea:focus{
+  box-shadow:0 0 12px rgba(0,255,190,.8)!important;
+  border-color:#00ffbe!important;
+}
+
+.profile-wrapper .btn-primary{
+  background: linear-gradient(135deg,#00ffbe,#00c9a7);
+  border:none;
+  color:#002b2b;
+  font-weight:bold;
+}
+</style>
+
+<div class="profile-wrapper">
+  <div class="container">
+
+    <h3 class="mb-4">👤 Welcome {{ request.user.username }}</h3>
+
+    <form method="post" enctype="multipart/form-data" novalidate>
+      {% csrf_token %}
+
+      <!-- AVATAR ONLY -->
+      <div class="text-center">
+        <div class="profile-avatar"
+             onclick="document.getElementById('photoInput').click()">
+
+          {% if patient.photo %}
+            <img src="{{ patient.photo.url }}" alt="Patient Photo">
+          {% else %}
+            {{ request.user.username|first|upper }}
+          {% endif %}
+
+        </div>
+
+        <input type="file" name="photo" id="photoInput" hidden>
+        <small class="text-muted">Click avatar to upload photo</small>
+      </div>
+
+      <hr class="my-4">
+
+      <!-- FORM FIELDS (PHOTO SKIPPED) -->
+      {% for fm in form %}
+        {% if fm.name != "photo" %}
+          <div class="form-group mb-3">
+            {{ fm.label_tag }}
+            {{ fm }}
+            {% if fm.errors %}
+              <small class="text-danger">
+                {{ fm.errors|striptags }}
+              </small>
+            {% endif %}
+          </div>
+        {% endif %}
+      {% endfor %}
+
+      <button type="submit" class="btn btn-primary w-100 mt-3">
+        💾 Save Profile
+      </button>
+    </form>
+
+    {% if messages %}
+      {% for message in messages %}
+        <p class="alert alert-{{ message.tags }} mt-3">{{ message }}</p>
+      {% endfor %}
+    {% endif %}
+
+  </div>
+</div>
+
+{% endblock content %}

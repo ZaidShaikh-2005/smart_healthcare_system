@@ -1,0 +1,157 @@
+{% extends 'app/base.html' %}
+{% block title %}Doctor Profile{% endblock %}
+
+{% block content %}
+
+<style>
+.profile-wrapper{
+    max-width:900px;
+    margin:50px auto;
+    color:#eafffb;
+}
+
+.profile-card{
+    background:linear-gradient(145deg,#0f1f21,#081416);
+    border-radius:22px;
+    padding:40px;
+    border:1px solid rgba(47,227,194,.3);
+    box-shadow:0 0 45px rgba(0,0,0,.65);
+}
+
+/* PHOTO */
+.profile-photo{
+    width:180px;
+    height:180px;
+    border-radius:50%;
+    margin:0 auto 25px;
+    border:4px solid #2fe3c2;
+    box-shadow:0 0 35px rgba(47,227,194,1);
+    overflow:hidden;
+}
+
+.profile-photo img{
+    width:100%;
+    height:100%;
+    object-fit:cover;
+}
+
+.profile-name{
+    text-align:center;
+    font-size:28px;
+    color:#2fe3c2;
+    font-weight:600;
+}
+
+.profile-sub{
+    text-align:center;
+    color:#9ff3e7;
+    margin-bottom:30px;
+}
+
+/* DETAILS */
+.profile-details{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:20px 40px;
+}
+
+.detail-box{
+    background:#020c0e;
+    border-radius:14px;
+    padding:16px 18px;
+    border:1px solid rgba(47,227,194,.3);
+}
+
+.detail-box span{
+    display:block;
+    font-size:13px;
+    color:#9ff3e7;
+    margin-bottom:4px;
+}
+
+.detail-box strong{
+    font-size:16px;
+    color:#eafffb;
+}
+
+/* FOOTER */
+.profile-footer{
+    margin-top:35px;
+    display:flex;
+    justify-content:flex-end;
+}
+</style>
+
+<div class="profile-wrapper">
+
+    <div class="profile-card">
+
+        <!-- PHOTO -->
+        <div class="profile-photo">
+            {% if doctor.photo %}
+                <img src="{{ doctor.photo.url }}" alt="Doctor Photo">
+            {% else %}
+                <img src="https://via.placeholder.com/180?text=No+Photo">
+            {% endif %}
+        </div>
+
+        <!-- NAME -->
+        <div class="profile-name">
+            Dr. {{ doctor.full_name|default:request.user.username }}
+        </div>
+
+        <div class="profile-sub">
+            {{ doctor.specialization|default:"Specialization not added" }}
+        </div>
+
+        <!-- DETAILS -->
+        <div class="profile-details">
+
+            <div class="detail-box">
+                <span>Qualification</span>
+                <strong>{{ doctor.qualification|default:"—" }}</strong>
+            </div>
+
+            <div class="detail-box">
+                <span>Clinic Location</span>
+                <strong>{{ doctor.clinic_location|default:"—" }}</strong>
+            </div>
+
+            <div class="detail-box">
+                <span>Available Days</span>
+                <strong>{{ doctor.available_days|default:"—" }}</strong>
+            </div>
+
+            <div class="detail-box">
+                <span>Available Time</span>
+                <strong>
+                    {{ doctor.available_from|default:"--" }}
+                    –
+                    {{ doctor.available_to|default:"--" }}
+                </strong>
+            </div>
+
+            <div class="detail-box">
+                <span>Online Fee</span>
+                <strong>₹ {{ doctor.online_fee }}</strong>
+            </div>
+
+            <div class="detail-box">
+                <span>Offline Fee</span>
+                <strong>₹ {{ doctor.offline_fee }}</strong>
+            </div>
+
+        </div>
+
+        <!-- FOOTER -->
+        <div class="profile-footer">
+            <a href="{% url 'doctor-profile' %}" class="btn btn-outline-info">
+                ✏️ Edit Profile
+            </a>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

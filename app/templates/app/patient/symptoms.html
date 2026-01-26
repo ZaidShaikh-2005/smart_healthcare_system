@@ -1,0 +1,154 @@
+{% extends 'app/base.html' %}
+{% block title %} | Select Symptoms{% endblock %}
+
+{% block content %}
+
+<style>
+/* ================= SEARCH BAR ================= */
+.search-wrapper{
+  position: sticky;
+  top: 80px; /* navbar height */
+  z-index: 999;
+  background:#050d0d;
+  padding:12px;
+  border-radius:16px;
+  border:1px solid rgba(0,255,200,.4);
+  box-shadow:0 0 18px rgba(0,255,200,.25);
+}
+
+/* IMPORTANT */
+.symptom-section{
+  padding-top: 8px; /* 🔥 PUSH CONTENT DOWN */
+}
+
+.search-input{
+  background:#041313;
+  border:1px solid rgba(0,255,200,.5);
+  color:#e6fffa;
+  border-radius:30px;
+  padding:12px 45px 12px 18px;
+  width:100%;
+}
+
+.search-input::placeholder{
+  color:#9fffe8;
+}
+
+/* ================= SYMPTOM CARD ================= */
+.symptom-card{
+  border:1px solid rgba(0,255,200,.5);
+  border-radius:12px;
+  padding:12px 10px;
+  text-align:center;
+  cursor:pointer;
+  transition:.25s;
+  background:#050d0d;
+  color:#e6fffa;
+  user-select:none;
+  min-height:52px;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+
+.symptom-card:hover{
+  transform:scale(1.06);
+  box-shadow:0 0 18px rgba(0,255,200,.6);
+}
+
+.symptom-card.active{
+  background:linear-gradient(135deg,#00ffbe,#00c9a7);
+  color:#002b2b;
+  font-weight:600;
+}
+
+.symptom-checkbox{ display:none; }
+.hidden{ display:none!important; }
+</style>
+
+<div class="container">
+
+  <h3 class="mb-3">Select Your Symptoms</h3>
+
+  <!-- 🔍 SEARCH BAR -->
+  <div class="search-wrapper mb-3">
+    <input
+      type="text"
+      id="symptomSearch"
+      class="search-input"
+      placeholder="🔍 Search symptoms (pain, swelling, fever...)"
+    >
+  </div>
+
+  <!-- 🔥 PUSHED CONTENT -->
+  <div class="symptom-section">
+
+    <form method="post">
+      {% csrf_token %}
+
+      <div class="row g-3" id="symptomGrid">
+        {% for symptom in symptoms %}
+        <div class="col-md-3 symptom-item"
+             data-name="{{ symptom.name|lower }}">
+          <div class="symptom-card
+            {% if symptom.id in selected_ids %}active{% endif %}">
+            
+            <input
+              type="checkbox"
+              name="symptoms"
+              value="{{ symptom.id }}"
+              class="symptom-checkbox"
+              {% if symptom.id in selected_ids %}checked{% endif %}
+            >
+
+            {{ symptom.name|title }}
+          </div>
+        </div>
+        {% endfor %}
+      </div>
+
+      <div class="d-flex align-items-center gap-3 mt-4">
+        <button class="btn btn-primary">💾 Save Symptoms</button>
+        <span id="symptomCount" class="fw-bold text-info">0 Selected</span>
+      </div>
+
+    </form>
+
+  </div>
+</div>
+
+<script>
+const cards = document.querySelectorAll('.symptom-card');
+const countEl = document.getElementById('symptomCount');
+const searchInput = document.getElementById('symptomSearch');
+const items = document.querySelectorAll('.symptom-item');
+
+function updateCount(){
+  countEl.innerText =
+    document.querySelectorAll('.symptom-checkbox:checked').length
+    + " Selected";
+}
+
+cards.forEach(card=>{
+  card.addEventListener('click', ()=>{
+    const cb = card.querySelector('input');
+    cb.checked = !cb.checked;
+    card.classList.toggle('active', cb.checked);
+    updateCount();
+  });
+});
+
+searchInput.addEventListener('input', ()=>{
+  const q = searchInput.value.toLowerCase();
+  items.forEach(item=>{
+    item.classList.toggle(
+      'hidden',
+      !item.dataset.name.includes(q)
+    );
+  });
+});
+
+updateCount();
+</script>
+
+{% endblock %}

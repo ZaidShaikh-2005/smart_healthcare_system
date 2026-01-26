@@ -1,0 +1,155 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block title %} | Health Record Detail{% endblock title %}
+
+{% block content %}
+
+<style>
+/* ================= RECORD DETAIL WRAPPER ================= */
+.record-detail-wrapper{
+  background: radial-gradient(circle at top, #0f2f2f, #050d0d);
+  color:#e6fffa;
+  padding:40px 0;
+  min-height:70vh;
+}
+
+/* ================= HEADING ================= */
+.record-detail-wrapper h3{
+  color:#7fffe1;
+  text-shadow:0 0 8px rgba(127,255,225,.6);
+  margin-bottom:20px;
+}
+
+/* ================= CARD ================= */
+.record-card{
+  background: linear-gradient(180deg,#0e2a2a,#061818);
+  border-radius:18px;
+  padding:30px;
+  border:1px solid rgba(0,255,200,.25);
+  box-shadow:0 0 25px rgba(0,255,200,.15);
+}
+
+/* ================= LABEL ================= */
+.record-label{
+  color:#7fffe1;
+  font-weight:500;
+}
+
+/* ================= VALUE ================= */
+.record-value{
+  font-size:20px;
+  font-weight:bold;
+  color:#00ffbe;
+}
+
+/* ================= ECG TEXT ================= */
+.ecg-box{
+  background:#050d0d;
+  border:1px dashed rgba(0,255,200,.4);
+  border-radius:12px;
+  padding:15px;
+  color:#cffff3;
+  font-family: monospace;
+  white-space: pre-wrap;
+}
+
+/* ================= ECG IMAGE ================= */
+.ecg-image{
+  max-width:100%;
+  max-height:300px;
+  border-radius:12px;
+  border:1px solid rgba(0,255,200,.4);
+  box-shadow:0 0 15px rgba(0,255,200,.3);
+}
+
+/* ================= BUTTON ================= */
+.btn-primary{
+  background: linear-gradient(135deg,#00ffbe,#00c9a7);
+  border:none;
+  color:#002b2b;
+  font-weight:bold;
+}
+
+.btn-primary:hover{
+  box-shadow:0 0 18px rgba(0,255,190,.9);
+}
+</style>
+
+<div class="record-detail-wrapper">
+  <div class="container">
+
+    <h3>
+      🧾 Health Record — {{ record.recorded_at|date:"d M Y, h:i A" }}
+    </h3>
+
+    <div class="record-card">
+
+      <div class="row g-4">
+
+        <div class="col-md-4">
+          <span class="record-label">❤️ Heart Rate</span><br>
+          <span class="record-value">{{ record.heart_rate }} BPM</span>
+        </div>
+
+        <div class="col-md-4">
+          <span class="record-label">🌡 Temperature</span><br>
+          <span class="record-value">{{ record.temperature }} °C</span>
+        </div>
+
+        <div class="col-md-4">
+          <span class="record-label">🫁 Oxygen Level</span><br>
+          <span class="record-value">{{ record.oxygen_level }} %</span>
+        </div>
+
+        <div class="col-md-4">
+          <span class="record-label">🩸 Glucose Level</span><br>
+          <span class="record-value">{{ record.glucose_level }} mg/dL</span>
+        </div>
+
+        <div class="col-md-4">
+          <span class="record-label">🩺 Blood Pressure</span><br>
+          <span class="record-value">
+            {{ record.systolic_bp }}/{{ record.diastolic_bp }}
+          </span>
+        </div>
+
+        <div class="col-md-4">
+          <span class="record-label">⚖ Weight</span><br>
+          <span class="record-value">{{ record.weight }} kg</span>
+        </div>
+
+        <!-- ================= ECG SECTION ================= -->
+        <div class="col-12">
+          <span class="record-label">📈 ECG</span>
+
+          {% if record.ecg %}
+            <div class="ecg-box mt-2">
+              {{ record.ecg }}
+            </div>
+          {% endif %}
+
+          {% if record.ecg_image %}
+            <div class="mt-3">
+              <img src="{{ record.ecg_image.url }}" class="ecg-image">
+            </div>
+          {% endif %}
+
+          {% if not record.ecg and not record.ecg_image %}
+            <p class="text-muted mt-2">ECG data not available.</p>
+          {% endif %}
+        </div>
+
+      </div>
+
+      <div class="text-end mt-4">
+        <a href="{% url 'patient-dashboard' %}" class="btn btn-primary">
+          ⬅ Back to Dashboard
+        </a>
+      </div>
+
+    </div>
+
+  </div>
+</div>
+
+{% endblock content %}

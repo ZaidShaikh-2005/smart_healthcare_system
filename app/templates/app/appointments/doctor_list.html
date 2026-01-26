@@ -1,0 +1,132 @@
+{% extends 'app/base.html' %}
+{% block title %}Doctors{% endblock %}
+
+{% block content %}
+
+<style>
+/* ================= GRID ================= */
+.doctor-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 25px;
+}
+
+/* ================= CARD ================= */
+.doctor-card {
+    background: linear-gradient(145deg, #16292b, #0f1c1e);
+    border-radius: 22px;
+    border: 1px solid rgba(47,227,194,0.25);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.6);
+    transition: all 0.3s ease;
+}
+
+.doctor-card:hover {
+    transform: translateY(-6px);
+    box-shadow: 0 0 30px rgba(47,227,194,0.8);
+}
+
+/* ================= IMAGE ================= */
+.doctor-avatar {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #2fe3c2, #1dbf9f);
+    color: #081214;
+    font-size: 38px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+}
+
+.doctor-avatar img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* ================= NAME ================= */
+.doctor-name {
+    color: #9ff3e7;
+    font-weight: 600;
+}
+
+/* ================= INFO ================= */
+.doctor-info p {
+    margin-bottom: 4px;
+    color: #eafdfc;
+}
+
+/* ================= FEES ================= */
+.fee {
+    font-weight: 700;
+    color: #2fe3c2;
+}
+
+/* ================= BUTTON ================= */
+.btn-book {
+    background: linear-gradient(135deg, #2fe3c2, #1dbf9f);
+    border: none;
+    color: #081214;
+    font-weight: 600;
+    border-radius: 14px;
+    padding: 10px;
+    transition: all 0.3s ease;
+}
+
+.btn-book:hover {
+    box-shadow: 0 0 20px rgba(47,227,194,0.9);
+}
+</style>
+
+<h3 class="mb-4">🧑‍⚕️ Available Doctors</h3>
+
+<div class="doctor-grid">
+
+    {% for doctor in doctors %}
+    <div class="doctor-card p-4">
+
+        <div class="d-flex align-items-center mb-3">
+            <div class="doctor-avatar me-3">
+                {% if doctor.photo %}
+                    <img src="{{ doctor.photo.url }}" alt="Doctor photo">
+                {% else %}
+                    {{ doctor.full_name|slice:":1"|upper }}
+                {% endif %}
+            </div>
+            <div>
+                <h5 class="doctor-name mb-1">
+                    Dr. {{ doctor.full_name }}
+                </h5>
+                <small>{{ doctor.specialization }}</small>
+            </div>
+        </div>
+
+        <div class="doctor-info mb-3">
+            <p><strong>🎓 Qualification:</strong> {{ doctor.qualification }}</p>
+            <p><strong>📍 Clinic:</strong> {{ doctor.clinic_location }}</p>
+            <p><strong>⏳ Experience:</strong> {{ doctor.experience_years }} years</p>
+            <p>
+                <strong>💻 Online Fee:</strong>
+                <span class="fee">₹{{ doctor.online_fee }}</span>
+            </p>
+            <p>
+                <strong>🏥 Offline Fee:</strong>
+                <span class="fee">₹{{ doctor.offline_fee }}</span>
+            </p>
+        </div>
+
+        <a href="{% url 'book-appointment' doctor.id %}"
+           class="btn btn-book w-100">
+            Book Appointment
+        </a>
+
+    </div>
+    {% empty %}
+    <p>No doctors available right now.</p>
+    {% endfor %}
+
+</div>
+
+{% endblock %}

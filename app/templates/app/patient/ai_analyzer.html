@@ -1,0 +1,200 @@
+{% extends 'app/base.html' %}
+{% block title %} | AI Health Analyzer{% endblock %}
+
+{% block content %}
+
+<style>
+/* ================= PAGE ================= */
+.ai-wrapper{
+  background: radial-gradient(circle at top, #0f2f2f, #050d0d);
+  color:#e6fffa;
+  padding:60px 0;
+  min-height:70vh;
+}
+
+.ai-title{
+  color:#7fffe1;
+  text-shadow:0 0 12px rgba(127,255,225,.6);
+}
+
+/* ================= CARD ================= */
+.ai-card{
+  background: linear-gradient(180deg,#0e2a2a,#061818);
+  border-radius:18px;
+  padding:30px;
+  border:1px solid rgba(0,255,200,.25);
+  box-shadow:0 0 30px rgba(0,255,200,.18);
+}
+
+/* ================= PROGRESS ================= */
+.ai-row{
+  margin-bottom:26px;
+}
+
+.ai-label{
+  display:flex;
+  justify-content:space-between;
+  font-weight:600;
+  color:#7fffe1;
+}
+
+.progress{
+  height:14px;
+  background:#041313;
+  border-radius:20px;
+  overflow:hidden;
+  margin-bottom:10px;
+}
+
+.progress-bar{
+  border-radius:20px;
+  transition:width 1.2s ease;
+}
+
+/* Dynamic colors */
+.bar-high{ background:linear-gradient(135deg,#ff4d4d,#ff1a1a); }
+.bar-mid{ background:linear-gradient(135deg,#ffcc00,#ff9900); }
+.bar-low{ background:linear-gradient(135deg,#00ffbe,#00c9a7); }
+
+/* ================= DESCRIPTION ================= */
+.ai-desc{
+  font-size:14px;
+  color:#cffff4;
+  background:rgba(0,255,200,.08);
+  padding:12px;
+  border-radius:10px;
+  margin-bottom:10px;
+}
+
+/* ================= PRECAUTIONS ================= */
+.precautions{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+
+.precaution-pill{
+  background:rgba(0,255,200,.18);
+  border:1px solid rgba(0,255,200,.5);
+  padding:6px 12px;
+  border-radius:18px;
+  font-size:13px;
+  color:#7fffe1;
+  transition:.2s;
+}
+
+.precaution-pill:hover{
+  background:linear-gradient(135deg,#00ffbe,#00c9a7);
+  color:#002b2b;
+  transform:scale(1.05);
+}
+
+/* ================= DISCLAIMER ================= */
+.ai-disclaimer{
+  background:rgba(0,255,200,.12);
+  border:1px solid rgba(0,255,200,.4);
+  border-radius:12px;
+  padding:14px;
+  color:#cffff4;
+}
+
+/* ================= BUTTON ================= */
+.btn-back{
+  background:linear-gradient(135deg,#00ffbe,#00c9a7);
+  color:#002b2b;
+  font-weight:bold;
+  border:none;
+}
+</style>
+
+<div class="ai-wrapper">
+  <div class="container">
+
+    <div class="text-center mb-5">
+      <h2 class="ai-title">🤖 AI Health Analyzer</h2>
+      <p class="text-muted">
+        Probability-based prediction using selected symptoms
+      </p>
+    </div>
+
+    <!-- ================= AI CARD ================= -->
+    <div class="ai-card mb-4">
+
+      <h5 class="mb-4">📊 Possible Conditions (Top 3)</h5>
+
+      {% if predictions %}
+        {% for p in predictions %}
+
+          <div class="ai-row">
+
+            <!-- Disease + % -->
+            <div class="ai-label mb-1">
+              <span>{{ p.disease }}</span>
+              <span>{{ p.probability }}%</span>
+            </div>
+
+            <!-- Progress -->
+            <div class="progress">
+              <div
+                class="progress-bar
+                  {% if p.probability >= 70 %}
+                    bar-high
+                  {% elif p.probability >= 40 %}
+                    bar-mid
+                  {% else %}
+                    bar-low
+                  {% endif %}"
+                data-value="{{ p.probability }}"
+                style="width:0%"
+              ></div>
+            </div>
+
+            <!-- Description -->
+            <div class="ai-desc">
+              {{ p.description }}
+            </div>
+
+            <!-- Precautions -->
+            {% if p.precautions %}
+            <div class="precautions">
+              {% for prec in p.precautions %}
+                <span class="precaution-pill">✔ {{ prec }}</span>
+              {% endfor %}
+            </div>
+            {% endif %}
+
+          </div>
+
+          <hr style="border-color:rgba(0,255,200,.2)">
+
+        {% endfor %}
+      {% else %}
+        <div class="alert alert-warning">
+          No matching disease found for selected symptoms.
+        </div>
+      {% endif %}
+
+      <div class="ai-disclaimer mt-4">
+        ⚠️ This is a probability-based estimation, not a medical diagnosis.
+        Please consult a doctor for confirmation.
+      </div>
+
+    </div>
+
+    <a href="{% url 'patient-dashboard' %}" class="btn btn-back">
+      ⬅ Back to Dashboard
+    </a>
+
+  </div>
+</div>
+
+<script>
+document.querySelectorAll('.progress-bar').forEach(bar=>{
+  const value = bar.getAttribute('data-value');
+  setTimeout(()=>{
+    bar.style.width = value + "%";
+  }, 200);
+});
+</script>
+
+{% endblock %}

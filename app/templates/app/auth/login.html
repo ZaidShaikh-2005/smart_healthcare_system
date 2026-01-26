@@ -1,0 +1,135 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block title %}Login{% endblock title %}
+
+{% block content %}
+
+<style>
+/* ===== PAGE BACKGROUND ===== */
+body{
+  background: radial-gradient(circle at top, #0f2f2f, #050d0d);
+  color:#e6fffa;
+}
+
+/* ===== HEADING ===== */
+h3{
+  color:#7fffe1;
+  text-shadow:0 0 10px rgba(127,255,225,.6);
+  text-align:center;
+}
+
+/* ===== FORM CARD ===== */
+form.shadow{
+  background: linear-gradient(180deg,#0e2a2a,#061818);
+  border-radius:18px;
+  border:1px solid rgba(0,255,200,.25);
+  box-shadow:0 0 30px rgba(0,255,200,.2);
+}
+
+/* ===== LABEL ===== */
+label{
+  color:#cffff3;
+  font-weight:500;
+}
+
+/* ===== INPUT ===== */
+input, select, textarea{
+  background:#042020!important;
+  border:1px solid rgba(0,255,200,.35)!important;
+  color:#e6fffa!important;
+}
+
+input:focus{
+  box-shadow:0 0 12px rgba(0,255,200,.6)!important;
+  border-color:#00ffbe!important;
+}
+
+/* ===== LOGIN BUTTON ===== */
+.btn-primary{
+  background: linear-gradient(90deg,#00ffbe,#00cfa0);
+  border:none;
+  color:#003333;
+  font-weight:bold;
+  box-shadow:0 0 18px rgba(0,255,190,.6);
+}
+
+.btn-primary:hover{
+  transform: translateY(-2px);
+  box-shadow:0 0 25px rgba(0,255,190,.9);
+}
+
+/* ===== LINKS ===== */
+a{
+  color:#7fffe1;
+  text-decoration:none;
+}
+
+a:hover{
+  color:#00ffbe;
+  text-shadow:0 0 8px rgba(0,255,190,.8);
+}
+
+/* ===== ERROR ===== */
+.alert-danger{
+  background:#3b0f0f;
+  border:1px solid #ff6b6b;
+  color:#ffb3b3;
+}
+
+/* ===== FOOT TEXT ===== */
+.text-primary{
+  color:#7fffe1!important;
+}
+
+.text-danger{
+  color:#ff7b7b!important;
+}
+</style>
+
+<div class="container">
+ <div class="row my-5">
+  <div class="col-sm-6 offset-sm-3">
+
+   <h3>Login</h3>
+   <hr style="border-color:rgba(0,255,200,.3)">
+
+   <form method="post" novalidate class="shadow p-5">
+        {% csrf_token %}
+
+        {% for fm in form %}
+        <div class="form-group mb-3">
+          {{ fm.label_tag }}
+          {{ fm }}
+          <small class="text-danger">{{ fm.errors|striptags }}</small>
+        </div>
+        {% endfor %}
+
+        <small>
+          <a href="{% url 'password_reset' %}">Forgot Password?</a>
+        </small><br>
+
+        <input type="submit" class="btn btn-primary mt-4 w-100" value="Login">
+
+        <br><br>
+
+        <div class="text-center fw-bold">
+          <small>
+            New to Health Monitor?
+            <a href="{% url 'select-registration' %}" class="text-danger">
+              Create an Account
+            </a>
+          </small>
+        </div>
+
+        {% if form.non_field_errors %}
+          {% for error in form.non_field_errors %}
+            <p class="alert alert-danger my-3">{{ error }}</p>
+          {% endfor %}
+        {% endif %}
+   </form>
+
+  </div>
+ </div>
+</div>
+
+{% endblock content %}

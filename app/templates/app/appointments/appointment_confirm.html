@@ -1,0 +1,118 @@
+{% extends 'app/base.html' %}
+{% block title %}Appointment Confirmed{% endblock %}
+
+{% block content %}
+
+<style>
+/* ================= WRAPPER ================= */
+.confirm-wrapper {
+    max-width: 850px;
+    margin: auto;
+}
+
+/* ================= SUCCESS CARD ================= */
+.confirm-card {
+    background: linear-gradient(145deg, #16292b, #0f1c1e);
+    border-radius: 22px;
+    border: 1px solid rgba(47,227,194,0.3);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.65);
+}
+
+/* ================= ICON ================= */
+.success-icon {
+    font-size: 70px;
+    color: #2fe3c2;
+    text-shadow: 0 0 25px rgba(47,227,194,0.9);
+}
+
+/* ================= TITLE ================= */
+.confirm-title {
+    color: #9ff3e7;
+    font-weight: 600;
+}
+
+/* ================= INFO ================= */
+.confirm-info p {
+    margin-bottom: 6px;
+    color: #eafdfc;
+}
+
+/* ================= BADGE ================= */
+.badge-status {
+    background: linear-gradient(135deg, #2fe3c2, #1dbf9f);
+    color: #081214;
+    padding: 6px 12px;
+    border-radius: 14px;
+    font-weight: 600;
+}
+
+/* ================= BUTTON ================= */
+.btn-back {
+    background: linear-gradient(135deg, #2fe3c2, #1dbf9f);
+    border: none;
+    color: #081214;
+    font-weight: 600;
+    border-radius: 14px;
+    padding: 12px;
+    transition: all 0.3s ease;
+}
+
+.btn-back:hover {
+    box-shadow: 0 0 20px rgba(47,227,194,0.9);
+    transform: translateY(-1px);
+}
+</style>
+
+<div class="confirm-wrapper mt-5">
+
+    <div class="confirm-card p-5 text-center">
+
+        <div class="success-icon mb-3">✅</div>
+
+        <h3 class="confirm-title mb-3">
+            Appointment Confirmed!
+        </h3>
+
+        <p class="mb-4">
+            Your appointment has been successfully booked.
+        </p>
+
+        <div class="confirm-info text-start mb-4">
+
+            <p>
+                <strong>Doctor:</strong>
+                Dr. {{ appointment.doctor.full_name|default:appointment.doctor.user.username }}
+            </p>
+
+            <p>
+                <strong>Specialization:</strong>
+                {{ appointment.doctor.specialization }}
+            </p>
+
+            <p><strong>Date:</strong> {{ appointment.appointment_date }}</p>
+            <p><strong>Time:</strong> {{ appointment.appointment_time }}</p>
+
+            <p>
+                <strong>Status:</strong>
+                <span class="badge-status">
+                    {{ appointment.status }}
+                </span>
+            </p>
+
+        </div>
+
+        <div class="d-grid gap-3">
+            <a href="{% url 'patient-dashboard' %}" class="btn btn-back">
+                Go to Dashboard
+            </a>
+
+            <a href="{% url 'doctor-list' %}" class="btn btn-outline-light">
+                Book Another Appointment
+            </a>
+        </div>
+
+    </div>
+
+</div>
+
+{% endblock %}

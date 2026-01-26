@@ -1,0 +1,122 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block title %} | Register{% endblock title %}
+
+{% block content %}
+
+<style>
+/* ================= PAGE THEME ================= */
+.register-wrapper {
+    background: radial-gradient(circle at top, #0b3a3a, #021818);
+    color: #dffefe;
+    padding: 40px 0;
+    min-height: 70vh;
+}
+
+/* ================= HEADINGS ================= */
+.register-wrapper h3 {
+    color: #6fffe9;
+    text-align: center;
+    font-weight: 600;
+}
+
+/* ================= FORM CARD ================= */
+.register-wrapper form.shadow {
+    background: linear-gradient(145deg, #052b2b, #031818);
+    border: 1px solid #0aa6a6;
+    border-radius: 14px;
+    box-shadow: 0 0 25px rgba(0, 255, 200, 0.15);
+}
+
+/* ================= LABELS ================= */
+.register-wrapper form label {
+    color: #7fffd4;
+    font-weight: 500;
+}
+
+/* ================= INPUT ================= */
+.register-wrapper form input {
+    width: 100%;
+    background-color: #031e1e !important;
+    border: 1px solid #0aa6a6 !important;
+    color: #eaffff !important;
+    border-radius: 6px;
+}
+
+/* ================= SUBMIT ================= */
+.register-wrapper form input[type="submit"] {
+    background: linear-gradient(135deg, #00c9a7, #00b3b3);
+    border: none;
+    color: #022;
+    font-weight: 600;
+    padding: 12px;
+    border-radius: 8px;
+    margin-top: 10px;
+    transition: all 0.3s ease;
+}
+
+.register-wrapper form input[type="submit"]:hover {
+    background: linear-gradient(135deg, #00ffe1, #00cfcf);
+    box-shadow: 0 0 15px rgba(0, 255, 220, 0.8);
+    transform: translateY(-1px);
+}
+
+/* ================= ERRORS ================= */
+.register-wrapper .text-danger {
+    color: #ff6b6b !important;
+}
+
+.register-wrapper .alert {
+    background-color: #052b2b;
+    color: #aaffee;
+    border: 1px solid #00c9a7;
+}
+</style>
+
+<div class="register-wrapper">
+  <div class="container">
+    <div class="row my-3">
+      <div class="col-sm-6 offset-sm-3">
+
+        <h3>User Registration</h3>
+        <hr style="border-color:rgba(0,255,200,.3)">
+
+        <form method="post" novalidate class="shadow p-5">
+          {% csrf_token %}
+
+          {% for fm in form %}
+            <div class="form-group mb-3">
+              {{ fm.label_tag }}
+              {{ fm }}
+              <small class="text-danger">
+                {{ fm.errors|striptags }}
+              </small>
+            </div>
+          {% endfor %}
+
+          <input type="submit" value="Register">
+
+          <div class="text-center fw-bold mt-3">
+            <small>
+              Already have an account?
+              <a href="{% url 'login' %}" class="text-danger">
+                Login Now
+              </a>
+            </small>
+          </div>
+
+          {% if form.non_field_errors %}
+            {% for error in form.non_field_errors %}
+              <p class="alert alert-danger my-3">
+                {{ error }}
+              </p>
+            {% endfor %}
+          {% endif %}
+        </form>
+
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}

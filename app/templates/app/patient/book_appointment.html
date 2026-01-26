@@ -1,0 +1,110 @@
+{% extends 'app/base.html' %}
+{% block title %}Book Appointment{% endblock %}
+
+{% block content %}
+
+<style>
+.booking-header h3 {
+    color: #2fe3c2;
+    font-weight: 600;
+}
+
+.doctor-card {
+    background: linear-gradient(145deg, #16292b, #0f1c1e);
+    border-radius: 20px;
+    border: 1px solid rgba(47,227,194,0.25);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.6);
+}
+
+.doctor-img {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    border: 3px solid #2fe3c2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 40px;
+}
+
+.form-card {
+    background: linear-gradient(145deg, #16292b, #0f1c1e);
+    border-radius: 18px;
+    border: 1px solid rgba(47,227,194,0.25);
+    box-shadow: 0 15px 30px rgba(0,0,0,0.6);
+}
+
+.form-card input {
+    background: #0a1f22 !important;
+    border: 1px solid rgba(47,227,194,0.4) !important;
+    color: #eafdfc !important;
+}
+
+.btn-book {
+    background: linear-gradient(135deg, #2fe3c2, #1dbf9f);
+    border: none;
+    color: #081214;
+    font-weight: 600;
+    padding: 12px;
+    border-radius: 14px;
+}
+</style>
+
+<div class="booking-header mb-4">
+    <h3>📅 Book Appointment</h3>
+</div>
+
+<!-- DOCTOR INFO -->
+<div class="doctor-card p-4 mb-4">
+    <div class="d-flex align-items-center">
+        <div class="doctor-img me-4">👨‍⚕️</div>
+
+        <div>
+            <h5 class="text-info">Dr. {{ doctor.full_name }}</h5>
+            <p>🎓 {{ doctor.qualification|default:"—" }}</p>
+            <p>🩺 {{ doctor.specialization|default:"—" }}</p>
+            <p>📍 {{ doctor.clinic_location|default:"—" }}</p>
+            <p>
+                💻 Online: ₹{{ doctor.online_fee }} |
+                🏥 Offline: ₹{{ doctor.offline_fee }}
+            </p>
+            <p>
+                ⏰ {{ doctor.available_days }}
+                ({{ doctor.available_from }} - {{ doctor.available_to }})
+            </p>
+        </div>
+    </div>
+</div>
+
+<!-- BOOKING FORM -->
+<div class="form-card p-4">
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="row mb-4">
+            <div class="col-md-6">
+                <label>Appointment Date</label>
+                <input
+                    type="date"
+                    name="appointment_date"
+                    class="form-control"
+                    required>
+            </div>
+
+            <div class="col-md-6">
+                <label>Appointment Time</label>
+                <input
+                    type="time"
+                    name="appointment_time"
+                    class="form-control"
+                    required>
+            </div>
+        </div>
+
+        <button type="submit" class="btn btn-book w-100">
+            Confirm Appointment
+        </button>
+    </form>
+</div>
+
+{% endblock %}

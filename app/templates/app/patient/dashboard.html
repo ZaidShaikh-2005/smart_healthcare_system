@@ -1,0 +1,259 @@
+{% extends 'app/base.html' %}
+{% block title %} | Patient Dashboard{% endblock %}
+
+{% block content %}
+
+<style>
+.dashboard-wrapper{
+  background: radial-gradient(circle at top, #0f2f2f, #050d0d);
+  color:#e6fffa;
+  padding:40px 0;
+  min-height:70vh;
+}
+
+.dashboard-wrapper h3{
+  color:#7fffe1;
+  text-shadow:0 0 8px rgba(127,255,225,.6);
+}
+
+/* ================= STAT CARDS ================= */
+.stat-card{
+  background: linear-gradient(180deg,#0e2a2a,#061818);
+  border-radius:16px;
+  padding:20px;
+  border:1px solid rgba(0,255,200,.25);
+  box-shadow:0 0 20px rgba(0,255,200,.15);
+  text-align:center;
+  transition:.3s;
+  height:100%;
+}
+
+.stat-card:hover{
+  transform: translateY(-4px);
+  box-shadow:0 0 25px rgba(0,255,200,.3);
+}
+
+.stat-card h5{
+  color:#7fffe1;
+  margin-bottom:8px;
+}
+
+.stat-card p{
+  font-size:20px;
+  font-weight:bold;
+  color:#00ffbe;
+}
+
+/* ✅ BP TEXT PERFECT CENTER */
+.bp-card{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center;
+}
+
+/* ================= ECG IMAGE ================= */
+.ecg-preview{
+  width:100%;
+  max-height:180px;
+  object-fit:contain;
+  border-radius:12px;
+  border:1px dashed rgba(0,255,200,.4);
+  background:#050d0d;
+  padding:10px;
+}
+
+/* ================= TABLE ================= */
+.table-wrapper{
+  background: linear-gradient(180deg,#0e2a2a,#061818);
+  border-radius:16px;
+  padding:20px;
+  border:1px solid rgba(0,255,200,.25);
+  box-shadow:0 0 20px rgba(0,255,200,.15);
+}
+
+.table{
+  color:#e6fffa;
+}
+
+.table thead{
+  color:#7fffe1;
+}
+
+.table tbody tr:hover{
+  background: rgba(0,255,200,.08);
+}
+
+.btn-primary{
+  background: linear-gradient(135deg,#00ffbe,#00c9a7);
+  border:none;
+  color:#002b2b;
+  font-weight:bold;
+}
+
+/* ================= SYMPTOM PILL ================= */
+.symptom-pill{
+  padding:6px 14px;
+  border-radius:20px;
+  background:rgba(0,255,200,.15);
+  border:1px solid rgba(0,255,200,.5);
+  color:#7fffe1;
+  font-size:14px;
+  font-weight:500;
+  transition:.2s;
+}
+
+.symptom-pill:hover{
+  background:linear-gradient(135deg,#00ffbe,#00c9a7);
+  color:#002b2b;
+  transform:scale(1.08);
+}
+
+.selected-symptoms-card{
+  margin-bottom: 32px;
+}
+
+</style>
+
+<div class="dashboard-wrapper">
+  <div class="container">
+
+    <h3 class="mb-4">👋 Welcome {{ request.user.username }}</h3>
+
+    {% if latest_record %}
+    <div class="row g-3 mb-4">
+
+      <div class="col-md-3">
+        <div class="stat-card">
+          <h5>❤️ Heart Rate</h5>
+          <p>{{ latest_record.heart_rate }} BPM</p>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="stat-card">
+          <h5>🌡 Temperature</h5>
+          <p>{{ latest_record.temperature }} °C</p>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="stat-card">
+          <h5>🫁 Oxygen</h5>
+          <p>{{ latest_record.oxygen_level }} %</p>
+        </div>
+      </div>
+
+      <div class="col-md-3">
+        <div class="stat-card">
+          <h5>🩸 Glucose</h5>
+          <p>{{ latest_record.glucose_level }} mg/dL</p>
+        </div>
+      </div>
+
+      <!-- ✅ PERFECT CENTER BP -->
+      <div class="col-md-4">
+        <div class="stat-card bp-card">
+          <h5>🩺 Blood Pressure</h5>
+          <p>
+            {{ latest_record.systolic_bp }}/{{ latest_record.diastolic_bp }}
+          </p>
+        </div>
+      </div>
+
+      <!-- ECG IMAGE -->
+      <div class="col-md-8">
+        <div class="stat-card">
+          <h5>📈 ECG Report</h5>
+
+          {% if latest_record.ecg_image %}
+            <img
+              src="{{ latest_record.ecg_image.url }}"
+              class="ecg-preview mt-2"
+              alt="ECG Image"
+            >
+          {% else %}
+            <p class="text-muted mt-3">ECG image not uploaded</p>
+          {% endif %}
+        </div>
+      </div>
+
+    </div>
+    {% else %}
+      <p class="text-center text-warning">No health data added yet.</p>
+    {% endif %}
+
+    <!-- ACTION BUTTONS -->
+    <div class="d-flex justify-content-end gap-2 mb-3">
+      <a href="{% url 'add-health-record' %}" class="btn btn-primary">
+        ➕ Add Health Record
+      </a>
+      <a href="{% url 'doctor-list' %}" class="btn btn-outline-light">
+        📅 Book Appointment
+      </a>
+    </div>
+
+    <!-- ================= SYMPTOMS CARD ================= -->
+    {% if selected_symptoms %}
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="stat-card">
+
+          <h5 class="mb-3 text-center">🩺 Selected Symptoms</h5>
+
+          <div class="d-flex flex-wrap gap-2 justify-content-center">
+            {% for symptom in selected_symptoms %}
+              <span class="symptom-pill">
+                {{ symptom.name }}
+              </span>
+            {% endfor %}
+          </div>
+
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+
+    <!-- RECORD TABLE -->
+    <div class="table-wrapper">
+      <h5 class="mb-3">Recent Health Records</h5>
+
+      <div class="table-responsive">
+        <table class="table table-borderless align-middle">
+          <thead>
+            <tr>
+              <th>Date</th>
+              <th>Heart Rate</th>
+              <th>BP</th>
+              <th>Glucose</th>
+              <th>Oxygen</th>
+              <th>Weight</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for record in records %}
+            <tr>
+              <td>{{ record.recorded_at|date:"d M Y" }}</td>
+              <td>{{ record.heart_rate }} BPM</td>
+              <td>{{ record.systolic_bp }}/{{ record.diastolic_bp }}</td>
+              <td>{{ record.glucose_level }} mg/dL</td>
+              <td>{{ record.oxygen_level }} %</td>
+              <td>{{ record.weight }} kg</td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="6" class="text-center text-danger">
+                No health records found.
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,178 @@
+{% extends 'app/base.html' %}
+{% load static %}
+{% block title %} | Add Health Record{% endblock title %}
+
+{% block content %}
+
+<style>
+/* ================= PAGE WRAPPER ================= */
+.add-record-wrapper{
+  background: radial-gradient(circle at top, #0f2f2f, #050d0d);
+  color:#e6fffa;
+  padding:40px 0;
+  min-height:70vh;
+}
+
+/* ================= HEADING ================= */
+.add-record-wrapper h3{
+  color:#7fffe1;
+  text-shadow:0 0 8px rgba(127,255,225,.6);
+  text-align:center;
+  margin-bottom:25px;
+}
+
+/* ================= FORM CARD ================= */
+.add-record-card{
+  background: linear-gradient(180deg,#0e2a2a,#061818);
+  padding:30px;
+  border-radius:18px;
+  border:1px solid rgba(0,255,200,.25);
+  box-shadow:0 0 25px rgba(0,255,200,.15);
+}
+
+/* ================= LABEL ================= */
+.add-record-card label{
+  color:#7fffe1;
+  font-weight:500;
+}
+
+/* ================= INPUT ================= */
+.add-record-card input,
+.add-record-card textarea,
+.add-record-card select{
+  background:#050d0d!important;
+  border:1px solid rgba(0,255,200,.35)!important;
+  color:#e6fffa!important;
+}
+
+.add-record-card input:focus,
+.add-record-card textarea:focus{
+  box-shadow:0 0 12px rgba(0,255,190,.8)!important;
+  border-color:#00ffbe!important;
+}
+
+/* ================= ECG PREVIEW ================= */
+.ecg-preview{
+  background:#050d0d;
+  border:1px dashed rgba(0,255,200,.4);
+  border-radius:12px;
+  padding:15px;
+  text-align:center;
+  color:#7fffe1;
+}
+
+/* ================= BUTTON ================= */
+.btn-primary{
+  background: linear-gradient(135deg,#00ffbe,#00c9a7);
+  border:none;
+  color:#002b2b;
+  font-weight:bold;
+  padding:12px;
+}
+
+.btn-primary:hover{
+  box-shadow:0 0 18px rgba(0,255,190,.9);
+  transform: translateY(-1px);
+}
+</style>
+
+<div class="add-record-wrapper">
+  <div class="container">
+    <div class="row justify-content-center">
+
+      <div class="col-md-10 col-lg-8">
+
+        <h3>➕ Add Health Record</h3>
+
+        <form method="post" enctype="multipart/form-data">
+          {% csrf_token %}
+
+          <div class="add-record-card">
+
+            <div class="row g-3">
+
+              <!-- HEART RATE -->
+              <div class="col-md-6">
+                {{ form.heart_rate.label_tag }}
+                {{ form.heart_rate }}
+                {{ form.heart_rate.errors }}
+              </div>
+
+              <!-- TEMPERATURE -->
+              <div class="col-md-6">
+                {{ form.temperature.label_tag }}
+                {{ form.temperature }}
+                {{ form.temperature.errors }}
+              </div>
+
+              <!-- OXYGEN -->
+              <div class="col-md-6">
+                {{ form.oxygen_level.label_tag }}
+                {{ form.oxygen_level }}
+                {{ form.oxygen_level.errors }}
+              </div>
+
+              <!-- GLUCOSE -->
+              <div class="col-md-6">
+                {{ form.glucose_level.label_tag }}
+                {{ form.glucose_level }}
+                {{ form.glucose_level.errors }}
+              </div>
+
+              <!-- BP -->
+              <div class="col-md-6">
+                {{ form.systolic_bp.label_tag }}
+                {{ form.systolic_bp }}
+              </div>
+
+              <div class="col-md-6">
+                {{ form.diastolic_bp.label_tag }}
+                {{ form.diastolic_bp }}
+              </div>
+
+              <!-- WEIGHT -->
+              <div class="col-md-6">
+                {{ form.weight.label_tag }}
+                {{ form.weight }}
+              </div>
+
+              <!-- ECG TEXT -->
+              <div class="col-12">
+                {{ form.ecg.label_tag }}
+                {{ form.ecg }}
+              </div>
+
+              <!-- ECG IMAGE -->
+              <div class="col-12">
+                <label>📈 ECG Image</label>
+                {{ form.ecg_image }}
+
+                <div class="ecg-preview mt-2">
+                  Upload ECG report image (JPG / PNG)
+                </div>
+              </div>
+
+            </div>
+
+            <div class="text-center mt-4">
+              <button type="submit" class="btn btn-primary w-100">
+                💾 Save Health Record
+              </button>
+            </div>
+
+            {% if form.non_field_errors %}
+              <div class="alert alert-danger mt-3">
+                {{ form.non_field_errors }}
+              </div>
+            {% endif %}
+
+          </div>
+        </form>
+
+      </div>
+
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
