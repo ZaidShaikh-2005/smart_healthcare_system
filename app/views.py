@@ -29,7 +29,7 @@ from .forms import (
 # =====================================================
 # HOME REDIRECT (ROLE BASED) → LOGIN REQUIRED
 # =====================================================
-@login_required
+
 def home_redirect(request):
     try:
         profile = UserProfile.objects.get(user=request.user)
