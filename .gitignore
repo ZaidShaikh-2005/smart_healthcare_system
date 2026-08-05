@@ -1,13 +1,32 @@
-# Virtual Environment
-venv/
-.venv/
-
 # Python
 __pycache__/
 *.pyc
 
-# Media
+# Virtual Environment
+venv/
+.venv/
+
+# Environment Variables
+.env
+
+# Database (optional)
+# Uncomment the next line if you DON'T want to upload your SQLite database
+# db.sqlite3
+
+# Media uploads
 media/
 
-# Static collected files
+# Collected static files
 staticfiles/
+
+# Build / PyInstaller
+dist/
+build/
+*.spec
+*.exe
+
+# VS Code
+.vscode/
+
+# macOS
+.DS_Store
