@@ -2,10 +2,6 @@
 __pycache__/
 *.pyc
 
-# Django
-db.sqlite3
-media/
-
 # PyInstaller / Archive
 dist/
 build/
