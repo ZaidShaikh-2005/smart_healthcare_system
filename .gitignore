@@ -1,12 +1,13 @@
+# Virtual Environment
+venv/
+.venv/
+
 # Python
 __pycache__/
 *.pyc
 
-# PyInstaller / Archive
-dist/
-build/
-*.spec
-*.exe
+# Media
+media/
 
-# Env
-.env
+# Static collected files
+staticfiles/
