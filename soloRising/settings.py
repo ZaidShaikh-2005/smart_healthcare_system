@@ -121,7 +121,7 @@ USE_I18N = True
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / "staticfiles" ##add neww
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"  ##add neww
+STATICFILES_STORAGE = "whitenoise.storage.CompressedStaticFilesStorage" ##add neww
 MEDIA_URL = '/media/'
 
 MEDIA_ROOT = BASE_DIR/ 'media'
